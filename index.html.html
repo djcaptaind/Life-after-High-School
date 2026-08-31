@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BUILD A LIFE — Real Life Simulator</title>
+<style>
+:root{
+  --bg:#06101c;
+  --bg2:#0a1829;
+  --panel:#0c1d32;
+  --line:rgba(255,255,255,.10);
+  --text:#f3f7fd;
+  --muted:#93a8c0;
+  --orange:#ff8a1a;
+  --orange2:#ffb056;
+  --college:#4aa3ff;
+  --military:#3dcf7a;
+  --trade:#ffb020;
+  --workforce:#c084fc;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;}
+body{
+  color:var(--text);
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:
+    radial-gradient(900px 420px at 12% -10%, rgba(255,138,26,.16), transparent 55%),
+    radial-gradient(800px 380px at 95% 8%, rgba(36,120,255,.14), transparent 50%),
+    radial-gradient(700px 500px at 50% 110%, rgba(64,200,140,.08), transparent 45%),
+    linear-gradient(180deg,#050d18 0%, #071422 42%, #06101c 100%);
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size:22px 22px;
+  mask-image:linear-gradient(#000 0%, transparent 85%);
+}
+header,main{position:relative;z-index:1}
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 4vw;position:sticky;top:0;z-index:8;
+  background:rgba(6,16,28,.86);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.brand{font-size:1.7rem;font-weight:900;letter-spacing:-.03em}
+.brand b,.orange{color:var(--orange)}
+.tag{color:var(--orange2);font-size:.68rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+button{font:inherit}
+#perf,.primary{
+  border:0;background:linear-gradient(180deg,#ff9a33,#ff7a00);
+  color:#101820;font-weight:900;border-radius:12px;padding:11px 16px;cursor:pointer;
+  box-shadow:0 8px 22px rgba(255,122,0,.28);
+}
+#perf:hover,.primary:hover{filter:brightness(1.06);transform:translateY(-1px)}
+main{width:min(1180px,94vw);margin:auto;padding:0 0 48px}
+.hero{text-align:center;padding:18px 0 8px}
+.hero h1{
+  font-size:clamp(2.1rem,5.6vw,4.4rem);
+  line-height:.86;letter-spacing:-.06em;margin:8px 0 12px;
+}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero>p{color:var(--muted);line-height:1.55;margin:0 auto 18px;max-width:720px}
+.steps{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:0 0 22px}
+.step{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+  border-radius:999px;padding:7px 12px;
+  color:#d5e3f2;font-size:.82rem;font-weight:700;
+}
+.step i{
+  width:22px;height:22px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--orange);color:#111;font-style:normal;font-size:.72rem;font-weight:900;
+}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.path{
+  position:relative;overflow:hidden;isolation:isolate;
+  min-height:230px;color:#fff;text-align:left;cursor:pointer;
+  padding:0;border:1px solid rgba(255,255,255,.14);
+  border-radius:22px;
+  box-shadow:0 16px 40px rgba(0,0,0,.35);
+  background:#0a1624 center/cover no-repeat;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.path:hover{transform:translateY(-6px) scale(1.01)}
+.path .shot{
+  position:absolute;inset:0;z-index:0;
+  background:center/cover no-repeat;
+  transform:scale(1.04);
+  transition:transform .35s ease;
+}
+.path:hover .shot{transform:scale(1.1)}
+.path .shade{
+  position:absolute;inset:0;z-index:1;
+  background:
+    linear-gradient(180deg, rgba(4,10,18,.18) 0%, rgba(4,10,18,.28) 38%, rgba(4,10,18,.92) 100%),
+    linear-gradient(90deg, rgba(4,10,18,.35), transparent 45%);
+}
+.path .copy{
+  position:relative;z-index:2;
+  height:100%;min-height:230px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:18px 18px 16px;
+  text-align:left;
+}
+.path .icon{
+  width:42px;height:42px;border-radius:12px;margin-bottom:auto;
+  display:grid;place-items:center;font-size:1.35rem;
+  background:rgba(8,16,28,.55);
+  border:1px solid rgba(255,255,255,.16);
+  backdrop-filter:blur(8px);
+}
+.path h2{font-size:1.7rem;margin:2px 0 4px;letter-spacing:-.03em;text-shadow:0 8px 24px rgba(0,0,0,.55)}
+.path p{color:#d7e4f2;margin:0;font-size:.9rem;max-width:92%}
+.arrow{
+  position:absolute;right:16px;bottom:18px;z-index:3;
+  width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--orange);color:#111;font-weight:900;font-size:1.05rem;
+}
+.path.college .shot{background-image:url("posters/college.jpg")}
+.path.military .shot{background-image:url("posters/military.jpg")}
+.path.trade .shot{background-image:url("posters/trade.jpg")}
+.path.workforce .shot{background-image:url("posters/workforce.jpg")}
+.path.college{--accent:var(--college)}
+.path.military{--accent:var(--military)}
+.path.trade{--accent:var(--trade)}
+.path.workforce{--accent:var(--workforce)}
+.path.college:hover{border-color:#4aa3ffaa;box-shadow:0 18px 36px rgba(74,163,255,.22)}
+.path.military:hover{border-color:#3dcf7aaa;box-shadow:0 18px 36px rgba(61,207,122,.2)}
+.path.trade:hover{border-color:#ffb020aa;box-shadow:0 18px 36px rgba(255,176,32,.22)}
+.path.workforce:hover{border-color:#c084fcaa;box-shadow:0 18px 36px rgba(192,132,252,.22)}
+.hint{text-align:center;color:#7e93ab;font-size:.8rem;margin:16px 0 0}
+.panel{margin:18px 0;background:linear-gradient(180deg,#0d2036,#0a1a2d);border:1px solid var(--line);border-radius:22px;padding:22px}
+.hide{display:none!important}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:15px;padding:16px}
+.card span{display:block;color:#8399b2;font-size:.66rem;letter-spacing:.08em}
+.card b{display:block;margin-top:7px;font-size:1.12rem}
+.deal h1{font-size:clamp(2rem,5vw,3.4rem);margin:10px 0}
+.quote{text-align:center;font-size:1.12rem;margin:22px;color:#c9d7e8}
+.primary{display:block;margin:18px auto}
+.hud{display:grid;grid-template-columns:.85fr 2.15fr;gap:15px}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.metric,.metrics > *{background:rgba(255,255,255,.05);border-radius:11px;padding:9px}
+.metrics span{display:block;color:#8499b0;font-size:.59rem;letter-spacing:.04em}
+.metrics b{font-size:1rem}
+.yearbar{display:grid;grid-template-columns:110px 1fr 170px;gap:12px;align-items:center;margin:15px 0;padding:12px 16px;background:#071727;border:1px solid var(--line);border-radius:13px}
+.bar{height:8px;background:rgba(255,255,255,.08);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2381ff,#ff8617)}
+.decision h1{font-size:clamp(1.8rem,4vw,3.2rem);margin:8px 0}
+.decision>p{color:#a9bbcf;line-height:1.5}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}
+.option{background:#102b49;border:1px solid var(--line);border-radius:17px;padding:16px;color:#fff;text-align:left;cursor:pointer}
+.option:hover{border-color:#ff9e42;transform:translateY(-2px)}
+.option:disabled{opacity:.55}
+.price{color:#ffad5d;font-weight:900}
+.option h3{margin:6px 0}
+.option p{color:#9fb1c6;line-height:1.4;margin:0}
+.result{text-align:center;border-color:#ff9e4245}
+.result h1{font-size:2.4rem}
+.final{text-align:center;padding:46px 0}
+.final h1{font-size:clamp(2rem,4vw,3.4rem)}
+.bigscore{font-size:clamp(4.5rem,10vw,7.5rem);font-weight:1000;color:#ff9c3e;line-height:1}
+.breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:900px;margin:25px auto}
+.performance *{transition:none!important;animation:none!important;box-shadow:none!important}
+@media(max-width:850px){
+  .paths,.options,.hud{grid-template-columns:1fr}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .yearbar{grid-template-columns:1fr}
+  .hero{padding-top:18px}
+  .hero h1{font-size:clamp(2.2rem,12vw,3.4rem)}
+  .path,.path .copy{min-height:200px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="tag">Callaway JROTC • Life After High School</div>
+    <div class="brand">BUILD <b>A</b> LIFE</div>
+  </div>
+  <button id="perf">PERFORMANCE MODE</button>
+</header>
+<main>
+<section id="start" class="hero">
+  <div class="tag">5-Year Real Life Simulator</div>
+  <h1>CHOOSE YOUR<br><em>DIRECTION.</em></h1>
+  <p>Pick one starting path — College, Military, Trade/Apprenticeship, or Workforce.<br><b>After that, your decisions and consequences build a unique life.</b></p>
+  <div class="steps">
+    <div class="step"><i>1</i> Choose a path</div>
+    <div class="step"><i>2</i> Face 5 years of decisions</div>
+    <div class="step"><i>3</i> Defend your life score</div>
+  </div>
+  <div class="paths">
+    <button class="path college" data-path="college">
+      <span class="shot"></span><span class="shade"></span>
+      <div class="copy">
+        <div class="icon">🎓</div>
+        <div class="tag">Education Path</div>
+        <h2>COLLEGE</h2>
+        <p>Financial aid • academics • internships • debt • career launch</p>
+      </div>
+      <div class="arrow">→</div>
+    </button>
+    <button class="path military" data-path="military">
+      <span class="shot"></span><span class="shade"></span>
+      <div class="copy">
+        <div class="icon">🪖</div>
+        <div class="tag">Service Path</div>
+        <h2>MILITARY</h2>
+        <p>Career field • housing • promotion • PCS • transition</p>
+      </div>
+      <div class="arrow">→</div>
+    </button>
+    <button class="path trade" data-path="trade">
+      <span class="shot"></span><span class="shade"></span>
+      <div class="copy">
+        <div class="icon">⚙️</div>
+        <div class="tag">Skilled Career Path</div>
+        <h2>TRADE / APPRENTICESHIP</h2>
+        <p>Tools • training • licensing • overtime • business</p>
+      </div>
+      <div class="arrow">→</div>
+    </button>
+    <button class="path workforce" data-path="workforce">
+      <span class="shot"></span><span class="shade"></span>
+      <div class="copy">
+        <div class="icon">💼</div>
+        <div class="tag">Employment Path</div>
+        <h2>WORKFORCE</h2>
+        <p>Wages • benefits • schedules • promotion • layoffs</p>
+      </div>
+      <div class="arrow">→</div>
+    </button>
+  </div>
+  <p class="hint">No rerolls. Life assigns family, cash, debt, and credit after you choose.</p>
+</section>
+
+<section id="deal" class="panel deal hide">
+  <div class="tag">Your Starting Life • No Reroll</div>
+  <h1 id="dealTitle"></h1>
+  <div id="cards" class="cards"></div>
+  <div class="quote">You chose the direction. Life assigned the starting circumstances.</div>
+  <button id="enter" class="primary">BEGIN YEAR ONE →</button>
+</section>
+
+<section id="game" class="hide">
+  <section class="panel hud">
+    <div>
+      <div id="pathLabel" class="tag"></div>
+      <h2 id="role"></h2>
+      <p id="family"></p>
+    </div>
+    <div id="metrics" class="metrics"></div>
+  </section>
+  <div class="yearbar">
+    <b id="year"></b>
+    <div class="bar"><i id="prog"></i></div>
+    <b id="round"></b>
+  </div>
+  <section class="panel decision">
+    <div id="category" class="tag"></div>
+    <h1 id="question"></h1>
+    <p id="context"></p>
+    <div id="options" class="options"></div>
+  </section>
+  <section id="result" class="panel result hide">
+    <div class="tag">Life Consequence</div>
+    <h1 id="resultTitle"></h1>
+    <p id="resultText"></p>
+    <button id="next" class="primary">CONTINUE →</button>
+  </section>
+</section>
+
+<section id="final" class="final hide">
+  <div class="tag">Five Years Later</div>
+  <h1 id="rank"></h1>
+  <div id="finalScore" class="bigscore"></div>
+  <p><b>Higher is better</b> — the score rewards a stable, sustainable life rather than simply having the most cash.</p>
+  <div id="breakdown" class="breakdown"></div>
+  <p>Defend your life: What was your strongest decision? Your costliest mistake? What sacrifice paid off? What would you change?</p>
+  <button class="primary" onclick="location.reload()">BUILD ANOTHER LIFE</button>
+</section>
+</main>
+<script>
+const DATA={"paths":{"college":{"label":"COLLEGE","icon":"\ud83c\udf93","roles":["Community College Student","Public University Student","College Student + Part-Time Worker"],"cash":[4300,5200,6100],"career":50,"specific":[["FINANCIAL AID","Your financial-aid offer arrives. How will you close the remaining gap?",[["Scholarships + part-time work",650,"Less free time, but limits borrowing.",{"cash":-650,"career":2,"stress":5,"debt":0}],["Federal student loan",300,"Preserves cash now but creates future debt.",{"cash":-300,"debt":3500,"credit":1}],["Private loan with co-signer",180,"Easy today; higher long-term risk.",{"cash":-180,"debt":5200,"credit":-2,"stability":-3}],["Reduce course load + work more",-900,"More income, but graduation may take longer.",{"cash":900,"career":-3,"stress":6}]]],["ACADEMICS","A required course is going badly at midterm. What do you do?",[["Tutoring + office hours",120,"Costs time; protects progress.",{"cash":-120,"career":6,"stress":3}],["Withdraw before deadline",0,"Protects GPA but delays completion.",{"career":-2,"stability":1}],["Ignore it and hope",0,"No cost today; high failure risk.",{"career":-7,"stress":8}],["Cut work hours to study",600,"Loses income but improves academic odds.",{"cash":-600,"career":8,"stress":-2}]]],["HOUSING","Campus housing rises next year. Choose a plan.",[["Stay on campus",2600,"Convenient, predictable, expensive.",{"cash":-2600,"stability":6}],["Off-campus with roommates",1850,"Lower cost; commute and roommate risk.",{"cash":-1850,"stability":3,"stress":2}],["Live with family",900,"Best savings potential; commute cost.",{"cash":-900,"savings":600,"stress":2}]]],["INTERNSHIP","You are offered an internship related to your major.",[["Take paid internship",-1400,"Lower summer income than full-time work, strong career value.",{"cash":1400,"career":12,"opportunity":15}],["Keep higher-paying unrelated job",-2300,"More cash now; less career exposure.",{"cash":2300,"career":-2,"opportunity":-5}],["Take unpaid prestigious internship",900,"High opportunity but major affordability pressure.",{"cash":-900,"career":10,"opportunity":12,"stress":9}]]],["MAJOR","Your major has weak job prospects for your goals. What now?",[["Research and change major",450,"May add coursework but improves fit.",{"cash":-450,"career":8,"opportunity":8}],["Add a marketable minor/certificate",700,"Extra cost and workload.",{"cash":-700,"career":9,"stress":5}],["Stay because changing is inconvenient",0,"No disruption now.",{"career":-5,"opportunity":-6}]]],["GRADUATION","Graduation is approaching. What is your employment strategy?",[["Apply early to 12 targeted jobs",180,"Time-intensive, strong odds.",{"cash":-180,"career":12,"opportunity":12,"stress":4}],["Wait until after graduation",0,"Less pressure now, delayed income risk.",{"career":-5,"opportunity":-8}],["Use career center + alumni network",90,"Low cost, strong leverage.",{"cash":-90,"career":10,"opportunity":14}]]],["STUDENT DEBT","You get a tax refund while carrying student debt.",[["Pay principal",1500,"Reduces future interest.",{"cash":-1500,"debt":-1500,"stability":7}],["Build emergency fund",1500,"Keeps debt but improves resilience.",{"cash":-1500,"savings":1500,"stability":7}],["Vacation",1500,"Enjoyment now; no balance-sheet improvement.",{"cash":-1500,"stress":-7,"stability":-2}]]],["CAREER LAUNCH","You receive two offers after school.",[["$47k with strong benefits",0,"Lower headline salary, stronger total compensation.",{"career":12,"protection":10,"stability":9}],["$53k contract role, no benefits",0,"Higher cash potential, more personal risk.",{"career":7,"cash":700,"protection":-5,"stability":-2}],["Graduate school immediately",2400,"More education and delayed full-time earnings.",{"cash":-2400,"debt":1800,"career":8,"opportunity":10}]]]]},"military":{"label":"MILITARY","icon":"\ud83e\ude96","roles":["Junior Enlisted Service Member","Active-Duty Service Member"],"cash":[7000,7800,8600],"career":62,"specific":[["CAREER FIELD","You can pursue a technical field with civilian transferability or a field you simply enjoy.",[["Technical specialty",0,"Training is demanding; strong civilian transfer.",{"career":10,"opportunity":13,"stress":4}],["Preferred nontechnical specialty",0,"Better personal fit; less direct civilian transfer.",{"career":5,"stress":-3}],["Choose only for a bonus",-1200,"Immediate bonus, uncertain long-term fit.",{"cash":1200,"career":1,"stress":6}]]],["HOUSING","You have a housing choice based on your current eligibility.",[["Government housing/barracks",650,"Low direct housing cost; less privacy.",{"cash":-650,"stability":8}],["Approved off-post housing",1900,"More independence; utilities and commute.",{"cash":-1900,"stability":5,"stress":2}]]],["EDUCATION BENEFIT","How will you use available education opportunities while serving?",[["Take one class at a time",350,"Slow, manageable progress.",{"cash":-350,"career":8,"opportunity":8,"stress":4}],["Professional credential",500,"Direct career value.",{"cash":-500,"career":11,"opportunity":12,"stress":5}],["Wait indefinitely",0,"More free time now.",{"career":-3,"opportunity":-5}]]],["PCS MOVE","You receive orders to move. Your household has choices to make.",[["Plan early + build move reserve",800,"Costs cash now, reduces disruption.",{"cash":-800,"stability":8,"stress":-4}],["Wait until last minute",0,"Preserves cash now; raises disruption risk.",{"stability":-6,"stress":10}]]],["PROMOTION","A promotion opportunity requires extra study and preparation.",[["Prepare consistently",250,"Time cost, better promotion odds.",{"cash":-250,"career":12,"stress":5}],["Rely on current performance",0,"No added effort; lower odds.",{"career":2}],["Take extra off-duty work instead",-700,"More cash; less promotion preparation.",{"cash":700,"career":-4,"stress":8}]]],["DEPLOYMENT / SEPARATION FUND","You may face a major transition within a year.",[["Build 3-month transition reserve",2400,"Less spending now, strong protection.",{"cash":-2400,"savings":2400,"stability":11}],["Build 1-month reserve",800,"Some cushion.",{"cash":-800,"savings":800,"stability":4}],["Assume income will never be interrupted",0,"Maximum spending flexibility today.",{"stability":-7}]]],["REENLISTMENT","Your service obligation is approaching a decision point.",[["Reenlist with career plan",0,"Stable income and advancement path.",{"career":10,"stability":9}],["Separate with job + savings lined up",500,"Transition costs, strong preparation.",{"cash":-500,"career":9,"opportunity":12,"stability":8}],["Separate with no plan",0,"Maximum freedom, high transition risk.",{"career":-8,"stability":-10,"stress":10}]]],["CIVILIAN TRANSITION","How will you translate military experience for civilian employers?",[["Credential + resume translation",450,"Turns experience into recognizable qualifications.",{"cash":-450,"career":12,"opportunity":15}],["Resume only",75,"Basic preparation.",{"cash":-75,"career":5}],["Wait until after separation",0,"Delays job-search readiness.",{"career":-6,"opportunity":-8}]]]]},"trade":{"label":"TRADE / APPRENTICESHIP","icon":"\u2699\ufe0f","roles":["Electrical Apprentice","HVAC Apprentice","Welding Apprentice","Plumbing Apprentice"],"cash":[6700,7600,8500],"career":64,"specific":[["TOOLS","Your employer expects you to provide basic tools.",[["Quality starter set",850,"Higher upfront cost; dependable.",{"cash":-850,"career":6,"stability":3}],["Cheapest set",320,"Saves money now; replacement risk.",{"cash":-320,"career":1,"stability":-3}],["Finance premium tools",95,"Low payment, large total obligation.",{"cash":-95,"debt":1700,"career":5,"credit":-2}]]],["APPRENTICESHIP","You can take overtime or attend optional advanced training.",[["Advanced training",350,"Less immediate income; faster skill growth.",{"cash":-350,"career":12,"opportunity":12}],["Overtime",-1100,"Strong current income; slower training.",{"cash":1100,"career":2,"stress":8}],["Balance both",200,"Hard schedule, good long-term mix.",{"cash":-200,"career":8,"stress":7}]]],["CERTIFICATION","A valuable certification exam opens.",[["Take prep course + exam",720,"Higher odds of passing.",{"cash":-720,"career":13,"opportunity":14}],["Self-study + exam",280,"Cheaper, requires discipline.",{"cash":-280,"career":9,"stress":5}],["Skip it",0,"No cost now; delays wage growth.",{"career":-5,"opportunity":-6}]]],["INJURY RISK","Your job is physically demanding. How do you protect your income?",[["Disability coverage + safety gear",620,"Costs money; protects earning ability.",{"cash":-620,"protection":12,"stability":8}],["Safety gear only",240,"Some protection.",{"cash":-240,"protection":6}],["Bare minimum",0,"More cash today; higher exposure.",{"protection":-8,"stability":-5}]]],["LICENSE","You qualify to pursue the next license level.",[["Apply now",950,"Costly, but increases earning potential.",{"cash":-950,"career":15,"opportunity":15}],["Wait one year",0,"Preserves cash, delays advancement.",{"career":-2}],["Change employers for small raise",-600,"Immediate pay increase, licensing delayed.",{"cash":600,"career":1}]]],["SIDE WORK","People begin asking you to do paid side jobs.",[["Only legal/insured work within qualifications",-900,"Slower growth, lower risk.",{"cash":900,"career":7,"protection":5}],["Take every cash job",-1800,"More income, greater liability and burnout.",{"cash":1800,"stress":12,"protection":-10}],["Decline side work",0,"Protects personal time.",{"stress":-4}]]],["BUSINESS","You are considering starting a small trade business.",[["Save + build business plan",1800,"Slow, disciplined preparation.",{"cash":-1800,"savings":1000,"career":10,"opportunity":14}],["Borrow heavily and launch now",500,"Fast start with substantial risk.",{"cash":-500,"debt":8500,"career":8,"stress":12}],["Stay employed and advance",0,"Lower upside, stable income.",{"career":8,"stability":8}]]],["JOURNEY-LEVEL CAREER","A higher-paying employer recruits you.",[["Move for 18% raise",-900,"Higher income; transition cost.",{"cash":900,"career":10,"opportunity":8}],["Stay for pension/benefits",0,"Lower immediate raise, strong stability.",{"career":6,"stability":10,"protection":7}],["Negotiate with current employer",0,"Could improve compensation without moving.",{"career":8,"opportunity":5}]]]]},"workforce":{"label":"WORKFORCE","icon":"\ud83d\udcbc","roles":["Warehouse Associate","Office Assistant","Medical Receptionist","Retail Shift Lead"],"cash":[5900,6800,7700],"career":46,"specific":[["JOB OFFER","Two entry-level jobs are available.",[["$18.50/hr + health + retirement",0,"Lower wage than the alternative; stronger benefits.",{"career":7,"protection":10,"stability":9}],["$21/hr, no benefits",0,"Higher wage; you absorb insurance and time-off risk.",{"cash":700,"protection":-6,"stability":-2}],["$17/hr with paid training",0,"Lower starting pay; advancement path.",{"career":10,"opportunity":11}]]],["SCHEDULE","Your manager offers a schedule change.",[["Predictable daytime schedule",0,"Supports family, appointments and training.",{"stability":8,"family":5}],["Variable schedule + shift differential",-650,"More income, less predictability.",{"cash":650,"stress":7,"family":-3}],["Night shift + larger differential",-1000,"Best pay; sleep and family strain.",{"cash":1000,"stress":11,"family":-5}]]],["BENEFITS","Open enrollment arrives.",[["Health + retirement match",900,"Costs take-home pay; builds protection and future assets.",{"cash":-900,"protection":11,"stability":8,"savings":300}],["Health only",600,"Protects medical risk.",{"cash":-600,"protection":8}],["Decline everything",0,"Maximum paycheck now.",{"protection":-10,"stability":-5}]]],["PROMOTION","A lead position adds responsibility and $2.25/hour.",[["Apply and prepare",150,"Small prep cost; advancement opportunity.",{"cash":-150,"career":12,"opportunity":10,"stress":5}],["Stay comfortable",0,"Stable duties, slower advancement.",{"career":-2}],["Change employers instead",-500,"Potentially more pay, less certainty.",{"cash":500,"career":6,"stability":-3}]]],["LAYOFF RISK","Your employer announces restructuring.",[["Update resume + apply now",120,"Preparation before crisis.",{"cash":-120,"career":7,"stability":6}],["Add short credential",500,"Costs money; improves options.",{"cash":-500,"career":10,"opportunity":11}],["Wait to see what happens",0,"No effort now; higher risk.",{"stability":-8,"stress":7}]]],["TUITION ASSISTANCE","Your employer will reimburse approved coursework.",[["Use it for career certificate",400,"Upfront cost, reimbursement later.",{"cash":-400,"career":13,"opportunity":14}],["Use it toward degree",650,"Longer commitment, broad advancement.",{"cash":-650,"career":11,"opportunity":13,"stress":5}],["Skip it",0,"No cost, no added credential.",{"opportunity":-5}]]],["JOB CHANGE","Another employer offers 12% more pay but worse benefits.",[["Take higher pay",-800,"More cash, weaker protection.",{"cash":800,"career":5,"protection":-6}],["Stay with benefits",0,"Predictability and protection.",{"stability":9,"protection":6}],["Negotiate current pay",0,"Potential upside without losing benefits.",{"career":8,"opportunity":6}]]],["CAREER DIRECTION","Five years in, what is your next move?",[["Supervisor track",350,"Training and responsibility.",{"cash":-350,"career":13,"opportunity":11,"stress":5}],["Technical certification",650,"Builds specialized earning power.",{"cash":-650,"career":14,"opportunity":14}],["Stay in current role",0,"Predictable, but slower growth.",{"stability":4,"career":1}]]]]}},"common":[["BUDGET","Your first full month exposes a gap between gross pay and take-home pay.",[["Build a zero-based budget",0,"Every dollar gets a job.",{"stability":7,"stress":-2}],["Spend first, save what's left",0,"Easy now; savings often disappears.",{"savings":-150,"stability":-5}],["Automate bills + savings",0,"Less flexibility, stronger consistency.",{"savings":250,"stability":8}]]],["GROCERIES","Food spending is running high.",[["Meal plan + groceries",420,"More time, predictable cost.",{"cash":-420,"stability":5}],["Mostly convenience food",720,"Saves time, costs more.",{"cash":-720,"stress":-2}],["Extreme cheapest diet",260,"Low cost, hard to sustain.",{"cash":-260,"stability":-2,"stress":5}]]],["PHONE / INTERNET","Choose connectivity that supports your actual needs.",[["Prepaid + home internet",520,"Functional and affordable.",{"cash":-520,"stability":4}],["Premium phone financing + unlimited",1250,"Convenient, expensive.",{"cash":-1250,"debt":700}],["Family plan + older phone",430,"Low cost if available.",{"cash":-430,"stability":3}]]],["AUTO INSURANCE","Choose auto coverage appropriate to your vehicle and finances.",[["Higher liability limits + reasonable deductible",780,"More protection, higher premium.",{"cash":-780,"protection":9}],["Legal minimum where applicable",430,"Lower premium, higher exposure.",{"cash":-430,"protection":1}],["Full coverage + low deductible",1120,"Strong protection, expensive.",{"cash":-1120,"protection":11}]]],["HEALTH INSURANCE","Choose health coverage.",[["Employer/standard plan",1050,"Premium cost with manageable medical exposure.",{"cash":-1050,"protection":10}],["High-deductible plan + health savings",720,"Lower premium; requires reserve.",{"cash":-720,"savings":250,"protection":7}],["Go uninsured",0,"Maximum cash now; major risk.",{"protection":-15,"stability":-8,"stress":4}]]],["CREDIT CARD","You receive a credit-card offer.",[["Use for one recurring bill; auto-pay full",0,"Builds history with discipline.",{"credit":10,"stability":4}],["Use for lifestyle purchases",0,"Convenience becomes revolving debt.",{"debt":1200,"credit":-8,"stress":6}],["Decline for now",0,"Avoids debt; slower credit-building.",{"credit":1}]]],["CAR REPAIR","Your vehicle needs an unexpected $1,100 repair.",[["Use emergency savings",0,"Reserve absorbs the shock.",{"savings":-1100,"stability":4}],["Credit card",100,"Preserves cash, creates costly debt.",{"cash":-100,"debt":1000,"credit":-4}],["Delay repair",0,"Cash preserved; reliability worsens.",{"stability":-10,"stress":9}]]],["RENT INCREASE","Your rent increases 11%.",[["Renew and cut other spending",900,"Keeps stability; squeezes budget.",{"cash":-900,"stability":4}],["Move to cheaper place",1250,"Moving costs now; lower future rent.",{"cash":-1250,"stability":2,"stress":5}],["Add roommate",300,"Strong savings, less privacy.",{"cash":-300,"savings":500,"stress":3}]]],["DENTAL","You need dental work that cannot be ignored.",[["Use insurance + cash",480,"Treats problem before it grows.",{"cash":-480,"protection":4}],["Payment plan",90,"Manageable today, new obligation.",{"cash":-90,"debt":650}],["Delay treatment",0,"No cost today; likely worse later.",{"stability":-6,"stress":7}]]],["FAMILY REQUEST","A family member asks for $700 unexpectedly.",[["Give full amount",700,"Helps family, reduces your cushion.",{"cash":-700,"family":8}],["Give $250 + help make plan",250,"Balances support and stability.",{"cash":-250,"family":6,"stability":3}],["Say no",0,"Protects finances; relationship strain possible.",{"family":-3}]]],["CHILDCARE","A dependent needs reliable care while you work or study.",[["Licensed reliable care",2200,"Expensive; protects schedule.",{"cash":-2200,"family":10,"stability":8}],["Informal low-cost care",900,"Affordable; reliability varies.",{"cash":-900,"family":3,"stress":5}],["Adjust work/school schedule",1300,"Moderate cost; time pressure.",{"cash":-1300,"family":7,"stress":7}]]],["MEDICAL EMERGENCY","An urgent medical problem occurs.",[["Pay deductible/copay from reserve",900,"Savings takes the hit, debt avoided.",{"savings":-900,"stability":5}],["Payment plan",150,"Preserves cash, creates obligation.",{"cash":-150,"debt":1100,"stress":5}],["Credit card",0,"Fast solution, expensive if carried.",{"debt":1450,"credit":-5,"stress":7}]]],["TAX REFUND","You receive a $1,800 tax refund.",[["Emergency fund",1800,"Builds resilience.",{"cash":-1800,"savings":1800,"stability":9}],["Pay debt",1800,"Reduces obligations.",{"cash":-1800,"debt":-1800,"credit":7}],["Spend it",1800,"Enjoyment now.",{"cash":-1800,"stress":-5}]]],["RETIREMENT","Your employer offers a retirement match.",[["Contribute enough for full match",900,"Less take-home pay; captures employer money.",{"cash":-900,"savings":1400,"stability":8}],["Contribute a little",400,"Some long-term progress.",{"cash":-400,"savings":600}],["Contribute nothing",0,"More cash today.",{"stability":-3}]]],["LIFESTYLE","Friends plan an expensive weekend.",[["Go and pay cash",650,"Fun without debt.",{"cash":-650,"stress":-6}],["Put it on credit",80,"Small payment; debt remains.",{"cash":-80,"debt":700,"stress":-4}],["Choose cheaper local plans",180,"Keeps social life and budget.",{"cash":-180,"stress":-4,"stability":3}]]],["EMERGENCY FUND","How aggressively will you build reserves?",[["$50/month",600,"Small cushion.",{"cash":-600,"savings":600}],["$150/month",1800,"Balanced.",{"cash":-1800,"savings":1800,"stability":6}],["$300/month",3600,"Strong protection, tight current budget.",{"cash":-3600,"savings":3600,"stability":10}]]],["ACCIDENT","A minor car accident leaves you responsible for a deductible and transportation.",[["Use reserve",850,"No new debt.",{"savings":-850,"stability":4}],["Payment/credit",100,"Keeps cash but adds debt.",{"cash":-100,"debt":900,"credit":-3}],["Skip repair if safe/legal",0,"Preserves cash; vehicle value suffers.",{"stability":-3}]]],["JOB BENEFITS","Compare two compensation packages.",[["Lower pay + health + retirement + paid leave",0,"Stronger total compensation.",{"protection":10,"stability":9,"career":5}],["Higher pay + weak benefits",-800,"More cash, more personal risk.",{"cash":800,"protection":-6}],["Negotiate",0,"May improve package, no guarantee.",{"career":6,"opportunity":5}]]],["SUBSCRIPTION CREEP","Small monthly subscriptions now total $145.",[["Cancel most",0,"Immediate recurring savings.",{"cash":500,"stability":4}],["Keep all",520,"Convenience/entertainment costs add up.",{"cash":-520}],["Keep two favorites",180,"Balanced choice.",{"cash":-180,"stress":-2}]]],["HOUSING EMERGENCY","A water leak damages $1,600 of belongings.",[["Insurance claim + deductible",500,"Coverage limits the loss.",{"cash":-500,"protection":5}],["Replace from savings",0,"No debt, but reserve drops.",{"savings":-1600}],["Finance replacements",100,"Preserves cash; adds debt.",{"cash":-100,"debt":1500,"stress":6}]]],["DEPENDENT HEALTH","A child/dependent needs recurring medication.",[["Use health plan + budget copays",480,"Predictable expense.",{"cash":-480,"family":7,"protection":5}],["Shop approved lower-cost options",300,"Requires effort; reduces cost.",{"cash":-300,"family":7}],["Skip doses to save money",0,"Unsafe and destabilizing.",{"family":-12,"stability":-10,"stress":12}]]],["PAYDAY PRESSURE","A bill is due two days before payday.",[["Use reserve",0,"Exactly what a cushion is for.",{"savings":-350,"stability":4}],["Ask creditor for due-date change",0,"Proactive communication can solve timing.",{"stability":5}],["Payday-style high-cost loan",50,"Fast cash, very expensive cycle.",{"cash":-50,"debt":550,"credit":-5,"stability":-8}]]],["HOMEOWNERSHIP","You are thinking about buying a home.",[["Keep saving and improve credit",1200,"Delays purchase; improves readiness.",{"cash":-1200,"savings":1200,"credit":5,"stability":7}],["Buy at maximum approval",2500,"Gets home now; thin monthly margin.",{"cash":-2500,"debt":12000,"stress":8}],["Decide renting fits current life",0,"Flexibility can be strategic.",{"stability":5}]]],["SIDE INCOME","You can earn extra money on weekends.",[["6 hours/week",-900,"Extra cash with moderate time cost.",{"cash":900,"stress":5}],["15 hours/week",-1900,"More money; burnout risk.",{"cash":1900,"stress":12,"family":-4}],["Protect recovery/family time",0,"No extra income; lower stress.",{"stress":-6,"family":4}]]],["FINAL RESERVE","A $3,000 windfall arrives near the end of Year 5.",[["Emergency fund",3000,"Maximum resilience.",{"cash":-3000,"savings":3000,"stability":10}],["Pay debt",3000,"Improves future cash flow.",{"cash":-3000,"debt":-3000,"credit":8}],["Career investment",3000,"Potential future return.",{"cash":-3000,"career":12,"opportunity":14}],["Lifestyle upgrade",3000,"Enjoyment now, little protection.",{"cash":-3000,"stress":-7}]]]]};
+const $=x=>document.getElementById(x),pick=a=>a[Math.floor(Math.random()*a.length)],cl=(v,a,b)=>Math.max(a,Math.min(b,v)),M=v=>(v<0?"-$":"$")+Math.abs(Math.round(v)).toLocaleString();
+let S=null,rounds=[],ri=0,locked=false;
+const families=[["Single • No Children",0,72,false],["Single Parent • 1 Child (Age 2)",1900,61,true],["Partnered • 1 Child (Age 4)",1250,70,true],["Helps Support a Family Member",650,66,true],["Single • No Children",0,72,false]];
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+document.querySelectorAll("[data-path]").forEach(b=>b.onclick=()=>start(b.dataset.path));
+function start(k){let p=DATA.paths[k],f=pick(families);S={key:k,path:p.label,role:pick(p.roles),cash:pick(p.cash)-f[1],savings:pick([300,550,900,1400,2100]),debt:pick([0,650,1500,2800]),credit:pick([584,621,658,697,731]),career:p.career,family:f[2],hasDependent:f[3],protection:55,stability:62,stress:32,opportunity:55,history:[]};buildRounds(p);$("start").classList.add("hide");$("deal").classList.remove("hide");$("dealTitle").textContent=p.icon+" "+p.label;let c=[["STARTING ROLE",S.role],["AVAILABLE CASH",M(S.cash)],["EMERGENCY SAVINGS",M(S.savings)],["EXISTING DEBT",M(S.debt)],["CREDIT SCORE",S.credit],["FAMILY SITUATION",f[0]],["CAREER START",S.career+"/100"],["SIMULATION","40 ROUNDS"]];$("cards").innerHTML=c.map(x=>`<div class="card"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}
+function buildRounds(p){
+  const specific = shuffle(p.specific);
+  const commonPool = shuffle(DATA.common.filter(x =>
+    S.hasDependent || !["CHILDCARE","DEPENDENT HEALTH"].includes(x[0])
+  ));
+
+  rounds = [];
+  let specIndex = 0;
+  let commonIndex = 0;
+
+  for(let y=1; y<=5; y++){
+    // Two pathway-specific decisions every year.
+    for(let n=0; n<2; n++){
+      const sp = specific[specIndex % specific.length];
+      rounds.push([y, ...sp]);
+      specIndex++;
+    }
+
+    // Six adult-life decisions every year.
+    for(let n=0; n<6; n++){
+      if(commonIndex >= commonPool.length){
+        commonIndex = 0;
+      }
+      const cp = commonPool[commonIndex++];
+      rounds.push([y, ...cp]);
+    }
+  }
+
+  // Guaranteed: 5 years × 8 rounds = 40.
+  rounds = rounds.slice(0,40);
+}
+$("enter").onclick=()=>{$("deal").classList.add("hide");$("game").classList.remove("hide");show()};
+function lifeScore(){let liquid=Math.min(100,Math.max(0,(S.savings/6000)*100));let debt=Math.max(0,100-S.debt/180);let cred=cl((S.credit-450)/3.5,0,100);return Math.round(.16*liquid+.14*debt+.12*cred+.14*S.career+.10*S.family+.12*S.protection+.14*S.stability+.08*(100-S.stress))}
+function render(){$("pathLabel").textContent=S.path;$("role").textContent=S.role;$("family").textContent=S.hasDependent?"You have family/dependent responsibilities.":"No dependent-care responsibility currently.";let m=[["CASH",M(S.cash)],["SAVINGS",M(S.savings)],["DEBT",M(S.debt)],["CREDIT",S.credit],["CAREER",S.career],["FAMILY",S.family],["PROTECTION",S.protection],["STABILITY",S.stability],["STRESS",S.stress],["LIFE SCORE",lifeScore()]];$("metrics").innerHTML=m.map(x=>`<div class="metric"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}
+function show(){
+  locked=false;
+  render();
+
+  if(ri>=rounds.length) return finish();
+
+  const r=rounds[ri];
+  const y=r[0];
+  const category=r[1];
+  const question=r[2];
+
+  // Current scenario format:
+  // [year, category, question, options]
+  // Also supports [year, category, question, context, options].
+  let context="";
+  let opts=[];
+
+  if(Array.isArray(r[3])){
+    opts=r[3];
+    context="Choose carefully. Consider the immediate cost AND the effect on your future stability.";
+  }else{
+    context=typeof r[3]==="string" ? r[3] : "";
+    opts=Array.isArray(r[4]) ? r[4] : [];
+  }
+
+  $("year").textContent="YEAR "+y;
+  $("round").textContent="ROUND "+(ri+1)+" / 40";
+  $("prog").style.width=((ri+1)/40*100)+"%";
+  $("category").textContent=category;
+  $("question").textContent=question;
+  $("context").textContent=context;
+
+  if(!opts.length){
+    $("options").innerHTML=
+      '<button id="skipScenario" class="option">'+
+      '<div class="price">RECOVERY MODE</div>'+
+      '<h3>SKIP THIS SCENARIO →</h3>'+
+      '<p>This scenario did not load correctly. Continue without losing your game.</p>'+
+      '</button>';
+    $("skipScenario").onclick=()=>{ri++;show();};
+    return;
+  }
+
+  $("options").innerHTML=opts.map((o,j)=>`
+    <button class="option" data-o="${j}">
+      <div class="price">${o[1]<0?"+ "+M(-o[1]):o[1]===0?"$0 TODAY":M(o[1])}</div>
+      <h3>${o[0]}</h3>
+      <p>${o[2]}</p>
+    </button>
+  `).join("");
+
+  document.querySelectorAll("[data-o]").forEach(b=>{
+    b.onclick=()=>choose(opts[Number(b.dataset.o)],r);
+  });
+}
+function apply(e){for(let[k,v] of Object.entries(e))if(typeof S[k]==="number")S[k]+=v;S.debt=Math.max(0,S.debt);S.savings=Math.max(0,S.savings);S.credit=cl(S.credit,300,850);["career","family","protection","stability","stress","opportunity"].forEach(k=>S[k]=cl(S[k],0,100))}
+function choose(o,r){if(locked)return;locked=true;document.querySelectorAll("[data-o]").forEach(b=>b.disabled=true);apply(o[3]);S.history.push([r[1],o[0]]);let e=null;if(Math.random()<.28){let events=[["UNEXPECTED EXPENSE","A $475 expense hits before the next paycheck.",{cash:-475,stress:5}],["GOOD BREAK","Preparation and reliability create a $600 opportunity.",{cash:600,career:3,stability:2}],["PRICE INCREASE","A recurring essential cost rises.",{cash:-320,stress:3}],["HELP NEEDED","A family responsibility requires time and $275.",{cash:-275,family:3,stress:4}]];e=pick(events);apply(e[2])}$("resultTitle").textContent=e?e[0]:"DECISION LOCKED";$("resultText").textContent=e?e[1]:"Your decision is now part of your life. Its effect carries into later years.";$("result").classList.remove("hide");render();$("result").scrollIntoView({behavior:"smooth",block:"center"})}
+$("next").onclick=()=>{$("result").classList.add("hide");ri++;show()};
+function finish(){$("game").classList.add("hide");$("final").classList.remove("hide");let x=lifeScore();$("finalScore").textContent=x+"/100";$("rank").textContent=x>=90?"EXCEPTIONALLY STABLE":x>=80?"STABLE & THRIVING":x>=70?"STABLE & GROWING":x>=60?"FUNCTIONING — BUT EXPOSED":x>=45?"ONE MAJOR SETBACK FROM CRISIS":"FINANCIAL / LIFE CRISIS";let vals=[["FINANCIAL RESILIENCE",Math.round(cl(S.savings/60,0,100))],["CREDIT",Math.round(cl((S.credit-450)/3.5,0,100))],["CAREER",S.career],["FAMILY",S.family],["PROTECTION",S.protection],["STABILITY",S.stability]];$("breakdown").innerHTML=vals.map(v=>`<div class="card"><span>${v[0]}</span><b>${v[1]} / 100</b></div>`).join("")}
+$("perf").onclick=()=>document.body.classList.toggle("performance");
+</script>
+</body></html>
