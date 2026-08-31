@@ -353,6 +353,16 @@ body[data-path="workforce"] #final > *{position:relative;z-index:1}
 .hit.flat{color:#d5e3f2}
 .event{color:#ffd19a;max-width:720px;margin:8px auto 0;line-height:1.5}
 
+
+.postbox{max-width:720px;margin:24px auto;padding:18px;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(8,20,34,.55);text-align:center}
+.postrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.postrow input{background:#0b1c2e;border:1px solid rgba(255,255,255,.14);color:#fff;border-radius:12px;padding:12px 14px;min-width:240px;font:inherit}
+.postrow .primary{margin:0;display:inline-block}
+.qrline{display:flex;gap:12px;align-items:center;justify-content:center;text-align:left;margin-top:12px}
+.qrline img{width:92px;height:92px;border-radius:10px;background:#fff;padding:5px}
+.why{color:#93a8c0}
+#postNote{color:#8dffc0;font-weight:800}
+
 .performance *{transition:none!important;animation:none!important;box-shadow:none!important}
 @media(max-width:850px){
   .paths,.options,.hud{grid-template-columns:1fr}
@@ -473,9 +483,22 @@ body[data-path="workforce"] #final > *{position:relative;z-index:1}
   <div class="tag">Five Years Later</div>
   <h1 id="rank"></h1>
   <div id="finalScore" class="bigscore"></div>
-  <p><b>Higher is better</b> — the score rewards a stable, sustainable life rather than simply having the most cash.</p>
+  <p><b>Higher is better</b> — cash can look strong and still lose. Life Score rewards credit, protection, career, savings, and stability.</p>
   <div id="breakdown" class="breakdown"></div>
   <p>Defend your life: What was your strongest decision? Your costliest mistake? What sacrifice paid off? What would you change?</p>
+  <div class="postbox">
+    <div class="tag">Post to live scoreboard</div>
+    <p class="why">A cadet with $15,000 and no insurance can lose to a cadet with $7,000 and a stable position.</p>
+    <div class="postrow">
+      <input id="cadetName" placeholder="Cadet name / call sign">
+      <button class="primary" id="postBtn" type="button">POST MY LIFE SCORE</button>
+    </div>
+    <p id="postNote"></p>
+    <div class="qrline">
+      <img alt="Scoreboard QR" src="data:image/png;base64,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">
+      <p>Instructor board: scan or open <b>scoreboard.html</b> on the projector.</p>
+    </div>
+  </div>
   <button class="primary" onclick="location.reload()">BUILD ANOTHER LIFE</button>
 </section>
 </main>
@@ -497,7 +520,11 @@ function explainHits(e){const labels={cash:"Cash",savings:"Savings",debt:"Debt",
 function feedbackCopy(o,r,hits){let cost=o[1],costLine=cost<0?"You gained "+M(-cost)+" today.":cost===0?"No extra cash moved today.":"You spent "+M(cost)+" today.";let why=o[2]||"This choice now sits in your five-year record.";let good=hits.filter(h=>h.up).map(h=>h.label.toLowerCase());let bad=hits.filter(h=>!h.up).map(h=>h.label.toLowerCase());let trade=good.length&&bad.length?"You strengthened "+good.join(", ")+" in exchange for pressure on "+bad.join(", ")+".":good.length?"This leans toward a stronger position in "+good.join(", ")+".":bad.length?"This creates exposure in "+bad.join(", ")+".":"The visible numbers barely moved — the risk may show up later.";return costLine+" "+why+" "+trade;}
 function choose(o,r){if(locked)return;locked=true;document.querySelectorAll("[data-o]").forEach(b=>b.disabled=true);let fx=o[3]||{};apply(fx);S.history.push([r[1],o[0]]);let hits=explainHits(fx);let e=null;if(Math.random()<.28){let events=[["UNEXPECTED EXPENSE","A $475 expense hits before the next paycheck.",{cash:-475,stress:5}],["GOOD BREAK","Preparation and reliability create a $600 opportunity.",{cash:600,career:3,stability:2}],["PRICE INCREASE","A recurring essential cost rises.",{cash:-320,stress:3}],["HELP NEEDED","A family responsibility requires time and $275.",{cash:-275,family:3,stress:4}]];e=pick(events);apply(e[2]);hits=hits.concat(explainHits(e[2]));}$("resultTitle").textContent="YOU CHOSE: "+o[0];$("resultText").textContent=feedbackCopy(o,r,explainHits(fx));$("resultHits").innerHTML=hits.map(h=>`<span class="hit ${h.up?"up":"down"}">${h.label} ${h.val}</span>`).join("");$("resultEvent").textContent=e?("Meanwhile: "+e[0]+" — "+e[1]):"No extra life event hit this round.";$("result").classList.remove("hide");render()}
 $("next").onclick=()=>{$("result").classList.add("hide");ri++;show()};
-function finish(){$("game").classList.add("hide");$("final").classList.remove("hide");let x=lifeScore();$("finalScore").textContent=x+"/100";$("rank").textContent=x>=90?"EXCEPTIONALLY STABLE":x>=80?"STABLE & THRIVING":x>=70?"STABLE & GROWING":x>=60?"FUNCTIONING — BUT EXPOSED":x>=45?"ONE MAJOR SETBACK FROM CRISIS":"FINANCIAL / LIFE CRISIS";let vals=[["FINANCIAL RESILIENCE",Math.round(cl(S.savings/60,0,100))],["CREDIT",Math.round(cl((S.credit-450)/3.5,0,100))],["CAREER",S.career],["FAMILY",S.family],["PROTECTION",S.protection],["STABILITY",S.stability]];$("breakdown").innerHTML=vals.map(v=>`<div class="card"><span>${v[0]}</span><b>${v[1]} / 100</b></div>`).join("")}
+function bandLabel(x){return x>=90?"EXCEPTIONALLY STABLE":x>=80?"STABLE & THRIVING":x>=70?"STABLE & GROWING":x>=60?"FUNCTIONING — BUT EXPOSED":x>=45?"ONE MAJOR SETBACK FROM CRISIS":"FINANCIAL / LIFE CRISIS"}
+function finish(){$("game").classList.add("hide");$("final").classList.remove("hide");let x=lifeScore();$("finalScore").textContent=x+"/100";$("rank").textContent=bandLabel(x);let vals=[["FINANCIAL RESILIENCE",Math.round(cl(S.savings/60,0,100))],["CREDIT",Math.round(cl((S.credit-450)/3.5,0,100))],["CAREER",S.career],["FAMILY",S.family],["PROTECTION",S.protection],["STABILITY",S.stability]];$("breakdown").innerHTML=vals.map(v=>`<div class="card"><span>${v[0]}</span><b>${v[1]} / 100</b></div>`).join("");window._final={score:x,cash:S.cash,path:S.path}}
+function postScore(){let name=($("cadetName").value||"").trim();if(!name){$("postNote").textContent="Enter a cadet name first.";return}let row={name,score:window._final.score,cash:window._final.cash,path:window._final.path,t:Date.now()};let key="bal-board-CALLAWAY";let list=[];try{list=JSON.parse(localStorage.getItem(key)||"[]")}catch(e){}let i=list.findIndex(x=>x.name.toLowerCase()===name.toLowerCase());if(i>=0)list[i]=row;else list.push(row);list.sort((a,b)=>b.score-a.score||a.cash-b.cash);localStorage.setItem(key,JSON.stringify(list));window.dispatchEvent(new CustomEvent("bal-score",{detail:row}));$("postNote").textContent="Posted: "+name+" • Life Score "+row.score+" • Cash "+M(row.cash)+". Open scoreboard.html on this same computer to show the live board. For class-wide live updates, add a Firebase URL in scoreboard.html."}
+
 $("perf").onclick=()=>document.body.classList.toggle("performance");
+$("postBtn")&&($("postBtn").onclick=postScore);
 </script>
 </body></html>
